@@ -33,4 +33,10 @@ una vez tiene la identificacion/handle el inyector usa una funcion de windows pa
 ### 3.2
 Con la dirección virtual remota y el manejador del proceso, el inyector llama a WriteProcessMemory. El sistema operativo realiza la copia de datos entre espacios de memoria de diferentes procesos de forma segura.
 ### 3.3 
+En este paso, el inyector primero necesita encontrar en memoria la función LoadLibrary, que pertenece a la biblioteca del sistema kernel32.dll. Esta función es la encargada de cargar una DLL dentro de un proceso. Como kernel32.dll está cargada en prácticamente todos los procesos de Windows, su dirección en memoria es compartida o consistente, lo que permite reutilizarla para inyección.
 
+Una vez obtenida esta dirección, el inyector crea un nuevo hilo dentro del proceso objetivo usando CreateRemoteThread. Este hilo se configura para ejecutar directamente la función LoadLibrary, pasándole como parámetro la dirección de memoria (dentro del proceso remoto) donde previamente se escribió la ruta de la DLL (nuestro payload).
+
+Cuando el sistema operativo inicia este hilo, el proceso objetivo comienza a ejecutar LoadLibrary como si fuera propio. Esto provoca que la DLL (nuestro payload) se cargue en su espacio de memoria y que su código se ejecute dentro de ese proceso.
+
+Resultado: la DLL (nuestro payload) queda inyectada y ejecutándose dentro del proceso objetivo, con acceso a su memoria, recursos y permisos.
