@@ -1,4 +1,4 @@
-# Inyector-Dll
+# 💉Inyector-Dll
 este inyector permite forzar a procesos a cargar un dll (Dynamic Link Library) que originalmente no deberia estar ahi una vez dentro el dll ejecuta codigo en el contexto de el proceso y su memoria ram dedicada
 ## conceptos importantes
 ### Procesos
